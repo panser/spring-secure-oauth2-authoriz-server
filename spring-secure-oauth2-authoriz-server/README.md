@@ -1,4 +1,4 @@
-# TEST APP
+# Заметки
 
 ## получить токен
 ```
@@ -98,3 +98,6 @@ $ curl -H "Authorization: bearer 91b6102e-5758-45f3-a697-49a308db11d9" localhost
 }
 
 ```
+
+## ЗАМЕЧАНИЯ
+* хоть я и хотел создать лишь **Authorization server но** все равно пришлось использовать аннотацию **@EnableResourceServer** что бы експортировать `/user` ресурс, а он необходим для подключения к этому сервису сторонних  resource-сервисов через `security.oauth2.resource.user-info-uri`
