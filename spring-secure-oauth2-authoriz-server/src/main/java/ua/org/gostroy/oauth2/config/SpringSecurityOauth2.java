@@ -1,6 +1,7 @@
 package ua.org.gostroy.oauth2.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,6 +18,12 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @EnableAuthorizationServer
 @EnableResourceServer
 public class SpringSecurityOauth2 extends AuthorizationServerConfigurerAdapter {
+
+    @Value("${security.oauth2.client.client-id}")
+    private String clientId;
+    @Value("${security.oauth2.client.client-secret}")
+    private String secretId;
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -35,21 +42,29 @@ public class SpringSecurityOauth2 extends AuthorizationServerConfigurerAdapter {
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // @formatter:off
         clients.inMemory()
-                .withClient("my-trusted-client")
+            .withClient(clientId)
+                .secret(secretId)
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
                 .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                 .scopes("read", "write", "trust")
                 .resourceIds("oauth2-resource")
                 .accessTokenValiditySeconds(600)
-                .and()
-                .withClient("my-client-with-registered-redirect")
+        .and()
+            .withClient("my-trusted-client")
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+                .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+                .scopes("read", "write", "trust")
+                .resourceIds("oauth2-resource")
+                .accessTokenValiditySeconds(600)
+        .and()
+            .withClient("my-client-with-registered-redirect")
                 .authorizedGrantTypes("authorization_code")
                 .authorities("ROLE_CLIENT")
                 .scopes("read", "trust")
                 .resourceIds("oauth2-resource")
                 .redirectUris("http://anywhere?key=value")
-                .and()
-                .withClient("my-client-with-secret")
+        .and()
+            .withClient("my-client-with-secret")
                 .authorizedGrantTypes("client_credentials", "password")
                 .authorities("ROLE_CLIENT")
                 .scopes("read")
