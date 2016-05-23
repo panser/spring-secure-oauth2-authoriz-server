@@ -99,9 +99,25 @@ $ curl -H "Authorization: bearer 91b6102e-5758-45f3-a697-49a308db11d9" localhost
 
 ```
 
+## TEORIA
+### Tokens
+сгенерированый токены должны где-то храниться, что бы отдавать их обратно втеченеии `expires_in` периода
+ * **InMemoryTokenStore** умолчание
+ * **JdbcTokenStore** в базе
+ * **JSON Web Token (JWT)** хранит всю информацию внутри выдаррого токена (то есть - не нужно бекэнда)
+
+### Endpoint URLs
+ * **/oauth/authorize** (the authorization endpoint). should be protected using Spring Security so that it is only accessible to authenticated users.
+ * **/oauth/token** (the token endpoint)
+ * **/oauth/confirm_access** показываеться клиенту для подтверждения его намерений получить токен у сервиса
+ * **/oauth/error** показывает ошибку при получении токена
+ * **/oauth/check_token** used by Resource Servers to decode access tokens
+ * **/oauth/token_key** (exposes public key for token verification if using JWT tokens)
+
 ## @EnableAuthorizationServer
 для настройки сервиса раздающего токены
 ### AuthorizationServerEndpointsConfigurer
+defines the authorization and token endpoints and the token services.
 ```
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -151,6 +167,7 @@ $ curl -H "Authorization: bearer 91b6102e-5758-45f3-a697-49a308db11d9" localhost
 ```
 
 ### AuthorizationServerSecurityConfigurer
+defines the security constraints on the token endpoint.
 ```
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -173,6 +190,7 @@ $ curl -H "Authorization: bearer 91b6102e-5758-45f3-a697-49a308db11d9" localhost
 
 
 ### ClientDetailsServiceConfigurer
+для настройки ClientDetailsService
 ```
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -201,7 +219,7 @@ Enter host password for user 'my-trusted-client':
 ```
 * **resourceIds**
 * **redirectUris**
-* **authorizedGrantTypes**  доступные типы авторизации на oauth2 сервисе
+* **authorizedGrantTypes**  доступные типы авторизации на oauth2 сервисе. Default value is empty.
   * **password** по паролю
   * **client_credentials**
   * **authorization_code**
@@ -209,7 +227,7 @@ Enter host password for user 'my-trusted-client':
   * **implicit**
 * **accessTokenValiditySeconds** время жизни токена
 * **refreshTokenValiditySeconds** время жизни токена
-* **scopes**  scope из oauth2
+* **scopes**  scope to which the client is limited. If scope is undefined or empty (the default) the client is not limited by scope.
 * **authorities**  роли spring-security
 * **autoApprove**
 * **additionalInformation**
@@ -219,7 +237,10 @@ Enter host password for user 'my-trusted-client':
 
 
 ## @EnableResourceServer
-для настройки доступа к определенным ресурсам
+для настройки доступа к определенным Oauth2 ресурсам
+* **tokenServices**: the bean that defines the token services (instance of ResourceServerTokenServices).
+* **resourceId**: the id for the resource (optional, but recommended and will be validated by the auth server if present).
+* **tokenExtractor** for extracting the tokens from incoming requests)
 ```
 	@Configuration
 	@EnableResourceServer
@@ -263,17 +284,20 @@ Enter host password for user 'my-trusted-client':
 	@Value("${oauth.token:http://localhost:8080/oauth/token}")
 	private String tokenUrl;
 
-		@Bean
-    	public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
-    		return new OAuth2RestTemplate(resource(), oauth2ClientContext);
-    	}
+	@Autowired
+	private OAuth2RestOperations restTemplate;
 
-    	@Bean
-    	protected OAuth2ProtectedResourceDetails resource() {
-    		AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
-    		resource.setAccessTokenUri(tokenUrl);
-    		resource.setUserAuthorizationUri(authorizeUrl);
-    		resource.setClientId("my-trusted-client");
-    		return resource ;
-    	}
+    @Bean
+    public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
+        return new OAuth2RestTemplate(resource(), oauth2ClientContext);
+    }
+
+    @Bean
+    protected OAuth2ProtectedResourceDetails resource() {
+        AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
+        resource.setAccessTokenUri(tokenUrl);
+        resource.setUserAuthorizationUri(authorizeUrl);
+        resource.setClientId("my-trusted-client");
+        return resource ;
+    }
 ```
