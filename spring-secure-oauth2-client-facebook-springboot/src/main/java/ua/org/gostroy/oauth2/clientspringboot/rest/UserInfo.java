@@ -1,4 +1,4 @@
-package ua.org.gostroy.oauth2.rest;
+package ua.org.gostroy.oauth2.clientspringboot.rest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

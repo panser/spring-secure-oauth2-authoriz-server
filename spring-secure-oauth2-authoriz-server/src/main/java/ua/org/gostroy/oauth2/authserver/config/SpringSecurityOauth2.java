@@ -1,4 +1,4 @@
-package ua.org.gostroy.oauth2.config;
+package ua.org.gostroy.oauth2.authserver.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

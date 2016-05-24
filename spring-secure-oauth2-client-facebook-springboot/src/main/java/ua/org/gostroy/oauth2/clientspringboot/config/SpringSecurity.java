@@ -1,4 +1,4 @@
-package ua.org.gostroy.oauth2.config;
+package ua.org.gostroy.oauth2.clientspringboot.config;
 
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package ua.org.gostroy.oauth2;
+package ua.org.gostroy.oauth2.resourceserver;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;

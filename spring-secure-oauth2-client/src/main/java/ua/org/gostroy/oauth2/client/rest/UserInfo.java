@@ -1,17 +1,19 @@
-package ua.org.gostroy.oauth2.rest;
+package ua.org.gostroy.oauth2.client.rest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 /**
  * Created by Sergey on 5/21/2016.
  */
 @RestController
-public class SomeResource {
+public class UserInfo {
 
-    @RequestMapping("/testOauth2")
-    public String testOauth2() {
-        return "testOauth2";
+    @RequestMapping("/user")
+    public Principal user(Principal user) {
+        return user;
     }
 
 }
