@@ -233,7 +233,18 @@ Enter host password for user 'my-trusted-client':
 * **additionalInformation**
 
 ### ЗАМЕЧАНИЯ
-* хоть я и хотел создать лишь **Authorization server но** все равно пришлось использовать аннотацию **@EnableResourceServer** что бы експортировать `/user` ресурс, а он необходим для подключения к этому сервису сторонних  resource-сервисов через `security.oauth2.resource.user-info-uri`
+* хоть я и хотел создать лишь **Authorization server но** все равно пришлось использовать аннотацию **@EnableResourceServer** что бы експортировать `/user` ресурс, а он необходим для подключения к этому сервису сторонних  resource-сервисов через `security.oauth2.resource.user-info-uri` . Без этой аноттации `/user` ресурс експортируеться, но он доступен лишь через http-basic авторизацию, а не по токену
+```
+$ curl localhost:8080/oauth/token -d "grant_type=password&scope=read&username=greg&password=turnquist" -u foo:bar
+{"access_token":"55849a83-b7a9-49ae-8584-3b61531d5674","token_type":"bearer","refresh_token":"57a647f4-b56c-4112-985e-767e51023e50","expires_in":599,"scope":"read"}
+$ curl -H "Authorization: bearer 55849a83-b7a9-49ae-8584-3b61531d5674" localhost:8080/user
+{"timestamp":1464077477180,"status":401,"error":"Unauthorized","message":"Full authentication is required to access this resource","path":"/user"}
+```
+это приводит к тому, что Resource-сервер не может получить информацию о клиенте, и соотвуетственно не может отдать свои ресурсы
+```
+$ curl -H "Authorization: bearer 55849a83-b7a9-49ae-8584-3b61531d5674" localhost:8083/testOauth2
+{"error":"invalid_token","error_description":"55849a83-b7a9-49ae-8584-3b61531d5674"}
+```
 
 
 ## @EnableResourceServer
