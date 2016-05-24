@@ -49,25 +49,15 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     OAuth2ClientContext oauth2ClientContext;
 
     @Bean
-    @ConfigurationProperties("facebook.client")
-    OAuth2ProtectedResourceDetails facebook() {
-        return new AuthorizationCodeResourceDetails();
-    }
-    @Bean
-    @ConfigurationProperties("facebook.resource")
-    ResourceServerProperties facebookResource() {
-        return new ResourceServerProperties();
+    @ConfigurationProperties("github")
+    ClientResourcesForSso github() {
+        return new ClientResourcesForSso();
     }
 
     @Bean
-    @ConfigurationProperties("github.client")
-    OAuth2ProtectedResourceDetails github() {
-        return new AuthorizationCodeResourceDetails();
-    }
-    @Bean
-    @ConfigurationProperties("github.resource")
-    ResourceServerProperties githubResource() {
-        return new ResourceServerProperties();
+    @ConfigurationProperties("facebook")
+    ClientResourcesForSso facebook() {
+        return new ClientResourcesForSso();
     }
 
     @Bean
@@ -82,18 +72,18 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .antMatcher("/**")
-                    .authorizeRequests()
-                .antMatchers("/","/login**","/webjars/**")
-                    .permitAll()
+                .authorizeRequests()
+                .antMatchers("/", "/login**", "/webjars/**")
+                .permitAll()
                 .anyRequest()
-                    .authenticated()
-            .and()
+                .authenticated()
+                .and()
                 .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
-            .and()
+                .and()
                 .logout().logoutSuccessUrl("/").permitAll()
-            .and()
+                .and()
                 .csrf().csrfTokenRepository(csrfTokenRepository())
-            .and()
+                .and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
         ;
@@ -128,21 +118,31 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
     private Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
-
-        OAuth2ClientAuthenticationProcessingFilter facebookFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/facebook");
-        OAuth2RestTemplate facebookTemplate = new OAuth2RestTemplate(facebook(), oauth2ClientContext);
-        facebookFilter.setRestTemplate(facebookTemplate);
-        facebookFilter.setTokenServices(new UserInfoTokenServices(facebookResource().getUserInfoUri(), facebook().getClientId()));
-        filters.add(facebookFilter);
-
-        OAuth2ClientAuthenticationProcessingFilter githubFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/github");
-        OAuth2RestTemplate githubTemplate = new OAuth2RestTemplate(github(), oauth2ClientContext);
-        githubFilter.setRestTemplate(githubTemplate);
-        githubFilter.setTokenServices(new UserInfoTokenServices(githubResource().getUserInfoUri(), github().getClientId()));
-        filters.add(githubFilter);
-
+        filters.add(ssoFilter(facebook(), "/login/facebook"));
+        filters.add(ssoFilter(github(), "/login/github"));
         filter.setFilters(filters);
         return filter;
+    }
 
+    private Filter ssoFilter(ClientResourcesForSso client, String path) {
+        OAuth2ClientAuthenticationProcessingFilter ssoFilter = new OAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2RestTemplate ssoTemplate = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
+        ssoFilter.setRestTemplate(ssoTemplate);
+        ssoFilter.setTokenServices(new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId()));
+        return ssoFilter;
+    }
+
+    class ClientResourcesForSso {
+
+        private OAuth2ProtectedResourceDetails client = new AuthorizationCodeResourceDetails();
+        private ResourceServerProperties resource = new ResourceServerProperties();
+
+        public OAuth2ProtectedResourceDetails getClient() {
+            return client;
+        }
+
+        public ResourceServerProperties getResource() {
+            return resource;
+        }
     }
 }
