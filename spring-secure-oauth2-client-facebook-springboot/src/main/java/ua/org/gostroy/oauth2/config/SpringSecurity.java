@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 @Configuration
 @EnableOAuth2Sso
-public class SpringSecurityOauth2 extends WebSecurityConfigurerAdapter {
+public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

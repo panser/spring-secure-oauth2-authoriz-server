@@ -41,7 +41,7 @@ import java.util.List;
  */
 @Configuration
 @EnableOAuth2Client
-public class SpringSecurityOauth2 extends WebSecurityConfigurerAdapter {
+public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     @Autowired
     OAuth2ClientContext oauth2ClientContext;
