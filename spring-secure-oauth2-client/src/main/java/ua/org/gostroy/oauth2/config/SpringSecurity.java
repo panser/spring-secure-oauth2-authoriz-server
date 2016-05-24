@@ -7,6 +7,7 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -41,6 +42,7 @@ import java.util.List;
  */
 @Configuration
 @EnableOAuth2Client
+@Order(value = 101)
 public class SpringSecurity extends WebSecurityConfigurerAdapter {
 
     @Autowired
