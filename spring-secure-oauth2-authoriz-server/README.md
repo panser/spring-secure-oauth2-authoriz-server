@@ -221,7 +221,11 @@ Enter host password for user 'my-trusted-client':
 * **redirectUris**
 * **authorizedGrantTypes**  доступные типы авторизации на oauth2 сервисе. Default value is empty.
   * **password** по паролю
-  * **client_credentials**
+  * **client_credentials**  так же использовать clientId:secretId для доступа к ресурсу. не безопасно, и используеться лишь в тестовыз целях, к примеру для проверки работы endpoint, лучше использовать **password**
+ ```
+ $ curl acme:acmesecret@localhost:8080/oauth/token -d grant_type=client_credentials
+ {"access_token":"370592fd-b9f8-452d-816a-4fd5c6b4b8a6","token_type":"bearer","expires_in":43199,"scope":"read write"}
+ ```
   * **authorization_code**
   * **refresh_token**
   * **implicit**
@@ -229,7 +233,7 @@ Enter host password for user 'my-trusted-client':
 * **refreshTokenValiditySeconds** время жизни токена
 * **scopes**  scope to which the client is limited. If scope is undefined or empty (the default) the client is not limited by scope.
 * **authorities**  роли spring-security
-* **autoApprove**
+* **autoApprove**  не показывать окно подтверждения при входе, входить автоматом
 * **additionalInformation**
 
 ### ЗАМЕЧАНИЯ
