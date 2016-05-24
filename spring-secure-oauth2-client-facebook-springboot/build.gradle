@@ -17,7 +17,7 @@ apply plugin: 'war'
 
 
 war {
-	baseName = 'spring_secure_oauth2_client'
+	baseName = 'spring_secure_oauth2_client_facebook_springboot'
 	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
