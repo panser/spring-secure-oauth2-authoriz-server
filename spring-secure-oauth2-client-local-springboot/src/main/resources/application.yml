@@ -1,0 +1,23 @@
+server:
+  port: 8084
+#  context-path: /client
+
+spring:
+  resources:
+    chain:
+      enabled: true
+
+security:
+  oauth2:
+    client:
+      client-id: foo
+      client-secret: bar
+      access-token-uri: http://localhost:8080/oauth/token
+      user-authorization-uri: http://localhost:8080/oauth/authorize
+    resource:
+      user-info-uri: http://localhost:8080/me
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
