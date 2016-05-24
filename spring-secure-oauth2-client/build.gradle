@@ -35,12 +35,13 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.security.oauth:spring-security-oauth2')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-devtools')
 
 	compile('org.webjars:webjars-locator')
 	compile('org.webjars:angularjs:1.4.3')
 	compile('org.webjars:jquery:2.1.1')
 	compile('org.webjars:bootstrap:3.2.0')
-//	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 
@@ -51,3 +52,8 @@ eclipse {
 		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
 	}
 }
+
+bootRun {
+	addResources = true
+}
+
