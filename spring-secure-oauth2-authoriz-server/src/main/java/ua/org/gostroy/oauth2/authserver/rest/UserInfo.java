@@ -11,7 +11,7 @@ import java.security.Principal;
 @RestController
 public class UserInfo {
 
-    @RequestMapping({ "/user", "/me" })
+    @RequestMapping("/me")
     public Principal user(Principal user) {
         return user;
     }
