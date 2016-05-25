@@ -1,0 +1,32 @@
+server:
+  port: 8084
+
+spring:
+  resources:
+    chain:
+      enabled: true
+
+facebook:
+  client:
+    clientId: 1558060831156834
+    clientSecret: f1297ba0d4ed2ca0d6ce8305fa2b90c3
+    accessTokenUri: https://graph.facebook.com/oauth/access_token
+    userAuthorizationUri: https://www.facebook.com/dialog/oauth
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://graph.facebook.com/me
+github:
+  client:
+    clientId: 7f2392b3c4ec9f0a9829
+    clientSecret: 8a3fbdaf43d9099b1eedd8811f05ed1f1ff62389
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
+
+logging:
+  level:
+    org.springframework.security: DEBUG
