@@ -1,6 +1,3 @@
-server:
-  port: 8084
-
 spring:
   resources:
     chain:
