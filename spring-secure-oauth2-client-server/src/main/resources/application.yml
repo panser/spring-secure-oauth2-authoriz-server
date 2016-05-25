@@ -1,10 +1,15 @@
-server:
-  port: 8084
-
 spring:
   resources:
     chain:
       enabled: true
+
+security:
+  oauth2:
+    client:
+      client-id: foo
+      client-secret: bar
+      scope: read,write
+      auto-approve-scopes: '.*'
 
 facebook:
   client:
