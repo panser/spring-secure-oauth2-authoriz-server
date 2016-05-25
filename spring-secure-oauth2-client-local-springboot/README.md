@@ -1,5 +1,7 @@
 # INFO
 
+обязательно должен быть запущен oauth2 сервер **spring-secure-oauth2-authoriz-server** или **spring-secure-oauth2-client-server** http://localhost:8080/
+
 для тестирования клиента перейдите по ссылке http://localhost:8084/client/
 ```
 The context path has to be explicit if you are running both the client and the auth server on localhost, otherwise the cookie paths clash and the two apps cannot agree on a session identifier.
