@@ -1,4 +1,4 @@
-package ua.org.gostroy.oauth2.client.config;
+package ua.org.gostroy.oauth2.clientserver.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,14 +12,19 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @Configuration
 @EnableAuthorizationServer
 @EnableResourceServer
+//public class SpringSecurityOauth2Server {
 public class SpringSecurityOauth2Server extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-                .antMatcher("/me")
-                .authorizeRequests().anyRequest().authenticated();
+                .antMatcher("/me2")
+                .authorizeRequests()
+                .anyRequest()
+                .permitAll()
+//                .authenticated()
+        ;
         // @formatter:on
     }
 }
