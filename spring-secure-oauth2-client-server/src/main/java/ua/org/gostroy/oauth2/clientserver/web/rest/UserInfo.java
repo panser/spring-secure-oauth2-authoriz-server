@@ -1,4 +1,4 @@
-package ua.org.gostroy.oauth2.clientserver.rest;
+package ua.org.gostroy.oauth2.clientserver.web.rest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +11,7 @@ import java.security.Principal;
 @RestController
 public class UserInfo {
 
-    @RequestMapping("/user")
+    @RequestMapping({ "/user", "/me" })
     public Principal user(Principal user) {
         return user;
     }
