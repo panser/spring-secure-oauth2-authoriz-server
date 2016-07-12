@@ -219,16 +219,17 @@ Enter host password for user 'my-trusted-client':
 ```
 * **resourceIds**
 * **redirectUris**
-* **authorizedGrantTypes**  доступные типы авторизации на oauth2 сервисе. Default value is empty.
-  * **password** по паролю
-  * **client_credentials**  так же использовать clientId:secretId для доступа к ресурсу. не безопасно, и используеться лишь в тестовыз целях, к примеру для проверки работы endpoint, лучше использовать **password**
+* **authorizedGrantTypes**  возможные способы для клиента получения  Access Token.
+  * **implicit**  самый короткий и простой вариант. Ключ возвращается на устройство пользователя, где был открыт диалог авторизации (в виде дополнительного параметра URL). Такой ключ может быть использован только для запросов непосредственно с устройства пользователя (например, для выполнения вызовов из Javascript на веб-сайте или из мобильного приложения). This flow can only provide short-lived tokens, not refresh tokens.
+  * **authorization_code** Используеться браузерами. двухэтапный вариант с дополнительной аутентификацией Вашего сервера. смена клиентского authorization code на AccessToken. authorization code получаеться предварительным запросом на ресурс авторизации с переадрасацией на Facebook/Google и выполнеием редиректа назад. так сделано что бы ни ПОЛЬЗОВАТЕЛЬ, ни User-Agent не увидили токена. Его должны знать в идеале лишь клиент(website/online game/app) и провайрер. Можно попросить "offline access", и токен будет действителен всегда.
+  * **refresh_token** получение AccessToken взамен на RefreshToken
+  * **password** по паролю. Несмотря на то, что такой режим работы несколько противоречит концепции создания протокола, он описан в спецификации.  This flow is mostly used in official applications (i.e: the official Twitter App) where it is ok to ask the user for a password.
+  * **client_credentials**  авторизация по секретному ключу приложения. Этот подход необходимо использовать только для доступа к специальным secure-методам. не требует авторизации от клиента, лишь clientId:secretId приложения. не безопасно, и используеться лишь в тестовыз целях, к примеру для проверки работы endpoint, лучше использовать **password**. используется для работы с API от своего имени напрямую. Фактически, клиент сразу проходит как авторизацию, так и аутентификацию.
+
  ```
  $ curl acme:acmesecret@localhost:8080/oauth/token -d grant_type=client_credentials
  {"access_token":"370592fd-b9f8-452d-816a-4fd5c6b4b8a6","token_type":"bearer","expires_in":43199,"scope":"read write"}
  ```
-  * **authorization_code**
-  * **refresh_token**
-  * **implicit**
 * **accessTokenValiditySeconds** время жизни токена
 * **refreshTokenValiditySeconds** время жизни токена
 * **scopes**  scope to which the client is limited. If scope is undefined or empty (the default) the client is not limited by scope.
